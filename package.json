@@ -12,12 +12,14 @@
   ],
   "scripts": {
     "storybook": "start-storybook -p 9001 -c .storybook",
-    "build": "rm -rf dist && ./node_modules/.bin/tsc -p tsconfig.json"
+    "build": "rm -rf dist && ./node_modules/.bin/tsc -p tsconfig.json",
+    "prepare": "npm run build"
   },
   "dependencies": {
     "@bloomprotocol/qr": "^1.0.0",
     "@types/react": "^16.8.12",
-    "react": "^16.8.6"
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6"
   },
   "devDependencies": {
     "@babel/core": "^7.3.4",
