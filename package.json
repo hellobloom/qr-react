@@ -1,0 +1,33 @@
+{
+  "name": "@bloomprotocol/qr-react",
+  "version": "1.0.0",
+  "description": "Canvas QR Renderer For React",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "repository": "https://github.com/hellobloom/qr-react",
+  "author": "Bloom Team <team@bloom.co>",
+  "license": "Apache-2.0",
+  "files": [
+    "dist/**"
+  ],
+  "scripts": {
+    "storybook": "start-storybook -p 9001 -c .storybook",
+    "build": "rm -rf dist && ./node_modules/.bin/tsc -p tsconfig.json",
+    "prepare": "npm run build"
+  },
+  "dependencies": {
+    "@bloomprotocol/qr": "^1.0.0",
+    "@types/react": "^16.8.12",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.3.4",
+    "@storybook/cli": "^5.0.6",
+    "@storybook/react": "^5.0.6",
+    "@types/node": "*",
+    "babel-loader": "^8.0.5",
+    "ts-loader": "^5.3.3",
+    "typescript": "^3.2.2"
+  }
+}
