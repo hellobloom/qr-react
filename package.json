@@ -11,23 +11,36 @@
     "dist/**"
   ],
   "scripts": {
-    "storybook": "start-storybook -p 9001 -c .storybook",
-    "build": "rm -rf dist && ./node_modules/.bin/tsc -p tsconfig.json",
-    "prepare": "npm run build"
+    "start": "tsdx watch --tsconfig ./tsconfig.build.json",
+    "build": "tsdx build --tsconfig ./tsconfig.build.json",
+    "lint": "tsdx lint src stories",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm run lint",
+    "storybook": "start-storybook -p 9001"
   },
   "dependencies": {
-    "@bloomprotocol/qr": "^1.0.0",
-    "@types/react": "^16.8.12",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6"
+    "@bloomprotocol/qr": "^2.0.0",
+    "react": "^16.8.6"
   },
   "devDependencies": {
-    "@babel/core": "^7.3.4",
-    "@storybook/cli": "^5.0.6",
-    "@storybook/react": "^5.0.6",
+    "@babel/core": "^7.7.7",
+    "@bloomprotocol/eslint-config": "^1.0.0-beta.1",
+    "@bloomprotocol/prettier-config": "^1.0.0-beta.1",
+    "@storybook/react": "^5.2.8",
     "@types/node": "*",
-    "babel-loader": "^8.0.5",
-    "ts-loader": "^5.3.3",
-    "typescript": "^3.2.2"
+    "@types/react": "^16.8.12",
+    "@typescript-eslint/eslint-plugin": "^2.14.0",
+    "@typescript-eslint/parser": "^2.14.0",
+    "acorn": "^7.1.0",
+    "babel-loader": "^8.0.6",
+    "babel-preset-react-app": "^9.1.0",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.9.0",
+    "eslint-plugin-prettier": "^3.1.2",
+    "prettier": "^1.19.1",
+    "react-dom": "^16.8.6",
+    "tsdx": "^0.12.1",
+    "typescript": "^3.7.4",
+    "webpack": "^4.41.5"
   }
 }

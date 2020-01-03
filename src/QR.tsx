@@ -1,16 +1,12 @@
 import React from 'react'
-import {RenderConfig} from '@bloomprotocol/qr'
+import {Config} from '@bloomprotocol/qr'
 
-import {useRenderQRCode} from './useRenderQRCode'
+import {useDrawQRCode} from './useRenderQRCode'
 
-type QRProps<T> = RenderConfig<T>
+type QRProps = Config<any>
 
-const QR: React.FC<QRProps<any>> = props => {
-  const containerRef = useRenderQRCode<any, HTMLSpanElement>(props)
+export const QR: React.FC<QRProps> = props => {
+  const canvasRef = useDrawQRCode(props)
 
-  // Set this to inline-block so the container only takes up enough room for the QR code.
-  // Consumers can wrap this in whatever they want for positioning.
-  return <span style={{display: 'inline-block'}} ref={containerRef} />
+  return <canvas ref={canvasRef} />
 }
-
-export {QR}
