@@ -1,14 +1,15 @@
 {
   "name": "@bloomprotocol/qr-react",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Canvas QR Renderer For React",
   "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "module": "dist/qr-react.esm.js",
+  "typings": "dist/index.d.ts",
   "repository": "https://github.com/hellobloom/qr-react",
   "author": "Bloom Team <team@bloom.co>",
   "license": "Apache-2.0",
   "files": [
-    "dist/**"
+    "dist"
   ],
   "scripts": {
     "start": "tsdx watch --tsconfig ./tsconfig.build.json",
