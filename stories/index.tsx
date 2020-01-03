@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import {storiesOf} from '@storybook/react'
 
-import {QR} from '../index'
+import {QR} from '../src/index'
 
 const UpdatingQR = () => {
   const [count, setCount] = useState(0)
