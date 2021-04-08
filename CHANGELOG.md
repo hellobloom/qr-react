@@ -1,3 +1,9 @@
+# 3.1.0
+
+**Features**:
+
+- Support rendering string data
+
 # 3.0.0
 
 **Breaking Changes**:

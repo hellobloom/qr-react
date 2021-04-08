@@ -22,6 +22,7 @@ export type QROptions = {
   bgColor?: string
   fgColor?: string
   ecLevel?: keyof typeof ErrorCorrectionLevel
+  // mode?: keyof typeof DataMode
   logo?: {
     hide?: boolean
     image?: string
@@ -32,7 +33,7 @@ export type QROptions = {
 }
 
 export type QRProps = QROptions & {
-  data: Record<string, unknown>
+  data: string | Record<string, unknown>
 }
 
 export const QR: FC<'svg', QRProps> = ({data, fgColor = '#6067f1', bgColor = '#ffffff00', ecLevel = 'L', logo, ...props}) => {
@@ -40,7 +41,7 @@ export const QR: FC<'svg', QRProps> = ({data, fgColor = '#6067f1', bgColor = '#f
   const logoMaskId = `${id}-logo-mask`
 
   const qr = new QRCodeImpl(-1, ErrorCorrectionLevel[ecLevel])
-  qr.addData(JSON.stringify(data))
+  qr.addData(typeof data === 'object' ? JSON.stringify(data) : data)
   qr.make()
 
   const cells: [boolean[]] = qr.modules
