@@ -22,6 +22,13 @@ describe('QR', () => {
     expect(asFragment()).toMatchSnapshot();
   });
 
+  it('string data', () => {
+    const { asFragment } = render(
+      <QR.StringData {...getArgs(QR.StringData.args as any)} />
+    );
+    expect(asFragment()).toMatchSnapshot();
+  });
+
   it('ec level', () => {
     const { asFragment } = render(
       <QR.ECLevel {...getArgs(QR.ECLevel.args as any)} />

@@ -16,19 +16,19 @@ npm install --save @bloomprotocol/qr-react
 ## Usage
 
 ```tsx
-import {QR} from '@bloomprotocol/qr-react'
+import { QR } from '@bloomprotocol/qr-react';
 
-const MyComponent: React.FC = props => {
+const MyComponent: React.FC = (props) => {
   return (
     <QR
       data={{
-        url: 'https://bloom.co'
+        url: 'https://bloom.co',
       }}
       height={256}
       width={256}
     />
-  )
-}
+  );
+};
 ```
 
 ![QR Example](https://github.com/hellobloom/qr-react/raw/master/assets/qr.png)
@@ -37,12 +37,12 @@ const MyComponent: React.FC = props => {
 
 In addition to the custom props outlined below you can provide any extra `<svg>` props.
 
-| Name    | Description                                                            | Type                      | Default                   |
-| ------- | ---------------------------------------------------------------------- | ------------------------- | ------------------------- |
-| bgColor | Background color of the QR code                                        | `string`                  | `"#ffffff00"`             |
-| fgColor | Color of the QR code dots and eyes                                     | `string`                  | `"#6067f1"`               |
-| logo    | Configuration of the logo to be displayed in the center of the QR code | [See below](#logo-config) | [See below](#logo-config) |
-
+| Name    | Description                                                            | Type                                | Default                   |
+| ------- | ---------------------------------------------------------------------- | ----------------------------------- | ------------------------- |
+| data    | The data displayed in the QR code                                      | `Record<string, unknown> \| string` | -                         |
+| bgColor | Background color of the QR code                                        | `string`                            | `"#ffffff00"`             |
+| fgColor | Color of the QR code dots and eyes                                     | `string`                            | `"#6067f1"`               |
+| logo    | Configuration of the logo to be displayed in the center of the QR code | [See below](#logo-config)           | [See below](#logo-config) |
 
 #### Logo Config
 
@@ -54,13 +54,13 @@ In addition to the custom props outlined below you can provide any extra `<svg>`
 | opacity | Opacity of the image                            | `number` | `1`                   |
 
 ```tsx
-import {QR} from '@bloomprotocol/qr-react'
+import { QR } from '@bloomprotocol/qr-react';
 
-const MyComponent: React.FC = props => {
+const MyComponent: React.FC = (props) => {
   return (
     <QR
       data={{
-        url: 'https://bloom.co'
+        url: 'https://bloom.co',
       }}
       logo={{
         image: 'https://placekitten.com/200/200',
@@ -68,6 +68,6 @@ const MyComponent: React.FC = props => {
       height={256}
       width={256}
     />
-  )
-}
+  );
+};
 ```

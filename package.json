@@ -1,5 +1,5 @@
 {
-  "version": "3.0.0",
+  "version": "3.1.0",
   "name": "@bloomprotocol/qr-react",
   "description": "SVG QR Renderer For React",
   "author": "Bloom Team <team@bloom.co>",

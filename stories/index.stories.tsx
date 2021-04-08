@@ -25,6 +25,14 @@ const DefaultArgs: QRProps = {
 
 Default.args = DefaultArgs;
 
+export const StringData = Template.bind({});
+
+const StringDataArgs: QRProps = {
+  data: 'https://bloom.co',
+};
+
+StringData.args = StringDataArgs;
+
 export const ECLevel = Template.bind({});
 
 const ECLevelArgs: QRProps = {
