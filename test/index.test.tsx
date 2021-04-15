@@ -59,7 +59,14 @@ describe('QR', () => {
 
   it('custom logo', () => {
     const { asFragment } = render(
-      <QR.LogoOpacity {...getArgs(QR.LogoOpacity.args as any)} />
+      <QR.CustomLogo {...getArgs(QR.CustomLogo.args as any)} />
+    );
+    expect(asFragment()).toMatchSnapshot();
+  });
+
+  it('custom renderers', () => {
+    const { asFragment } = render(
+      <QR.CustomRenderers {...getArgs(QR.CustomRenderers.args as any)} />
     );
     expect(asFragment()).toMatchSnapshot();
   });

@@ -43,6 +43,8 @@ In addition to the custom props outlined below you can provide any extra `<svg>`
 | bgColor | Background color of the QR code                                        | `string`                            | `"#ffffff00"`             |
 | fgColor | Color of the QR code dots and eyes                                     | `string`                            | `"#6067f1"`               |
 | logo    | Configuration of the logo to be displayed in the center of the QR code | [See below](#logo-config)           | [See below](#logo-config) |
+| eyeAs   | Optional custom component used to render the eyes of the QR            | `React.ComponentType<QREyeProps>`   | -                         |
+| dotAs   | Optional custom component used to render the dots of the QR            | `React.ComponentType<QRDotProps>`   | -                         |
 
 #### Logo Config
 
