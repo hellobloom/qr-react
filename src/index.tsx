@@ -1,4 +1,4 @@
-import React, {FC as BaseFC, ReactNode} from 'react'
+import React, {ComponentType, FC as BaseFC, ReactNode} from 'react'
 import {FC} from 'react-forward-props'
 import {useId} from '@reach/auto-id'
 
@@ -30,13 +30,24 @@ export type QROptions = {
     height?: number
     opacity?: number
   }
+  dotAs?: ComponentType<QRDotProps>
+  eyeAs?: ComponentType<QREyeProps>
 }
 
 export type QRProps = QROptions & {
   data: string | Record<string, unknown>
 }
 
-export const QR: FC<'svg', QRProps> = ({data, fgColor = '#6067f1', bgColor = '#ffffff00', ecLevel = 'L', logo, ...props}) => {
+export const QR: FC<'svg', QRProps> = ({
+  data,
+  fgColor = '#6067f1',
+  bgColor = '#ffffff00',
+  ecLevel = 'L',
+  logo,
+  eyeAs,
+  dotAs,
+  ...props
+}) => {
   const id = useId(props.id)
   const logoMaskId = `${id}-logo-mask`
 
@@ -107,11 +118,13 @@ export const QR: FC<'svg', QRProps> = ({data, fgColor = '#6067f1', bgColor = '#f
                   const isTopLeft = isBottom && !isTop && isLeft && !isRight
 
                   if (isTopLeft) {
-                    return <QREye {...cellInfo} baseId={id} />
+                    const Comp = eyeAs || QREye
+                    return <Comp {...cellInfo} baseId={id} />
                   }
                 }
               } else {
-                return <QRDot {...cellInfo} />
+                const Comp = dotAs || QRDot
+                return <Comp {...cellInfo} />
               }
             }
 
@@ -124,13 +137,15 @@ export const QR: FC<'svg', QRProps> = ({data, fgColor = '#6067f1', bgColor = '#f
   )
 }
 
-type QRDotProps = CellInfo
+export type QRDotProps = CellInfo & {
+  baseId?: string
+}
 
 const QRDot: BaseFC<QRDotProps> = props => (
   <circle fill={props.color} cx={props.left + props.size / 2} cy={props.top + props.size / 2} r={(props.size / 2) * 0.85} />
 )
 
-type QREyeProps = CellInfo & {
+export type QREyeProps = CellInfo & {
   baseId?: string
 }
 

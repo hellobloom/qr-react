@@ -1,3 +1,14 @@
+# 3.2.0
+
+**Features**:
+
+- Support custom dot and eye renderers
+  - Just set the `eyeAs` and/or `dotAs` props on `QR`
+
+**Misc**:
+
+- Bump dependencies
+
 # 3.1.0
 
 **Features**:
