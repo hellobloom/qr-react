@@ -15,9 +15,9 @@ const Template: Story<QRProps> = (args) => <QR {...args} width={256} height={256
 
 // mode === '8BIT_BTYE'
 
-export const BitByteModeWithObjData = Template.bind({})
+export const BitByteWithObjData = Template.bind({})
 
-const BitByteModeWithObjDataArgs: QRProps = {
+const BitByteWithObjDataArgs: QRProps = {
   data: [
     {
       mode: '8BIT_BYTE',
@@ -28,12 +28,12 @@ const BitByteModeWithObjDataArgs: QRProps = {
   ],
 }
 
-BitByteModeWithObjData.args = BitByteModeWithObjDataArgs
-BitByteModeWithObjData.storyName = '8BIT_BYTE (JSON value)'
+BitByteWithObjData.args = BitByteWithObjDataArgs
+BitByteWithObjData.storyName = '8BIT_BYTE (JSON value)'
 
-export const BitByteModeWithStringData = Template.bind({})
+export const BitByteWithStringData = Template.bind({})
 
-const BitByteModeWithStringDataArgs: QRProps = {
+const BitByteWithStringDataArgs: QRProps = {
   data: [
     {
       mode: '8BIT_BYTE',
@@ -42,14 +42,14 @@ const BitByteModeWithStringDataArgs: QRProps = {
   ],
 }
 
-BitByteModeWithStringData.args = BitByteModeWithStringDataArgs
-BitByteModeWithStringData.storyName = '8BIT_BYTE (string value)'
+BitByteWithStringData.args = BitByteWithStringDataArgs
+BitByteWithStringData.storyName = '8BIT_BYTE (string value)'
 
 // mode === 'NUM'
 
-export const NumMode = Template.bind({})
+export const Num = Template.bind({})
 
-const NumModeArgs: QRProps = {
+const NumArgs: QRProps = {
   data: [
     {
       mode: 'NUM',
@@ -58,14 +58,14 @@ const NumModeArgs: QRProps = {
   ],
 }
 
-NumMode.args = NumModeArgs
-NumMode.storyName = 'NUM'
+Num.args = NumArgs
+Num.storyName = 'NUM'
 
 // mode === 'ALPHA_NUM'
 
-export const AlphaNumMode = Template.bind({})
+export const AlphaNum = Template.bind({})
 
-const AlphaNumModeArgs: QRProps = {
+const AlphaNumArgs: QRProps = {
   data: [
     {
       mode: 'ALPHA_NUM',
@@ -74,14 +74,14 @@ const AlphaNumModeArgs: QRProps = {
   ],
 }
 
-AlphaNumMode.args = AlphaNumModeArgs
-AlphaNumMode.storyName = 'ALPHA_NUM'
+AlphaNum.args = AlphaNumArgs
+AlphaNum.storyName = 'ALPHA_NUM'
 
 // mode === 'KANJI'
 
-export const KanjiMode = Template.bind({})
+export const Kanji = Template.bind({})
 
-const KanjiModeArgs: QRProps = {
+const KanjiArgs: QRProps = {
   data: [
     {
       mode: 'KANJI',
@@ -90,5 +90,5 @@ const KanjiModeArgs: QRProps = {
   ],
 }
 
-KanjiMode.args = KanjiModeArgs
-KanjiMode.storyName = 'KANJI'
+Kanji.args = KanjiArgs
+Kanji.storyName = 'KANJI'

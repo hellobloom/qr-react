@@ -2,6 +2,7 @@ import React from 'react'
 import { render } from '@testing-library/react'
 
 import * as QR from '../stories/index.stories'
+import * as QRModes from '../stories/Modes.stories'
 
 const getArgs = <
   T extends {
@@ -58,5 +59,32 @@ describe('QR', () => {
   it('custom props', () => {
     const { asFragment } = render(<QR.CustomProps {...getArgs(QR.CustomProps.args as any)} />)
     expect(asFragment()).toMatchSnapshot()
+  })
+
+  describe('Modes', () => {
+    it('8BIT_BYTE (Obj Data)', () => {
+      const { asFragment } = render(<QRModes.BitByteWithObjData {...getArgs(QRModes.BitByteWithObjData.args as any)} />)
+      expect(asFragment()).toMatchSnapshot()
+    })
+
+    it('8BIT_BYTE (String Data)', () => {
+      const { asFragment } = render(<QRModes.BitByteWithStringData {...getArgs(QRModes.BitByteWithStringData.args as any)} />)
+      expect(asFragment()).toMatchSnapshot()
+    })
+
+    it('NUM', () => {
+      const { asFragment } = render(<QRModes.Num {...getArgs(QRModes.Num.args as any)} />)
+      expect(asFragment()).toMatchSnapshot()
+    })
+
+    it('ALPHA_NUM', () => {
+      const { asFragment } = render(<QRModes.AlphaNum {...getArgs(QRModes.AlphaNum.args as any)} />)
+      expect(asFragment()).toMatchSnapshot()
+    })
+
+    it('KANJI', () => {
+      const { asFragment } = render(<QRModes.Kanji {...getArgs(QRModes.Kanji.args as any)} />)
+      expect(asFragment()).toMatchSnapshot()
+    })
   })
 })
