@@ -1,50 +1,49 @@
-import React from 'react';
-import { Meta, Story } from '@storybook/react';
-import { ComponentProps } from 'react-forward-props';
+import React from 'react'
+import { Meta, Story } from '@storybook/react'
+import { ComponentProps } from 'react-forward-props'
 
-import { QR, QRProps } from '../src/index';
+// eslint-disable-next-line import/extensions
+import { QR, QRProps } from '../src/index'
 
 const meta: Meta = {
   title: 'QR',
   component: QR,
-};
+}
 
-export default meta;
+export default meta
 
-const Template: Story<QRProps> = (args) => (
-  <QR {...args} width={256} height={256} />
-);
+const Template: Story<QRProps> = (args) => <QR {...args} width={256} height={256} />
 
-export const Default = Template.bind({});
+export const Default = Template.bind({})
 
 const DefaultArgs: QRProps = {
   data: {
     url: 'https://bloom.co',
   },
-};
+}
 
-Default.args = DefaultArgs;
+Default.args = DefaultArgs
 
-export const StringData = Template.bind({});
+export const StringData = Template.bind({})
 
 const StringDataArgs: QRProps = {
   data: 'https://bloom.co',
-};
+}
 
-StringData.args = StringDataArgs;
+StringData.args = StringDataArgs
 
-export const ECLevel = Template.bind({});
+export const ECLevel = Template.bind({})
 
 const ECLevelArgs: QRProps = {
   data: {
     url: 'https://bloom.co',
   },
   ecLevel: 'H',
-};
+}
 
-ECLevel.args = ECLevelArgs;
+ECLevel.args = ECLevelArgs
 
-export const Color = Template.bind({});
+export const Color = Template.bind({})
 
 const ColorArgs: QRProps = {
   data: {
@@ -52,11 +51,11 @@ const ColorArgs: QRProps = {
   },
   bgColor: '#c84c57',
   fgColor: '#ecbf58',
-};
+}
 
-Color.args = ColorArgs;
+Color.args = ColorArgs
 
-export const HideLogo = Template.bind({});
+export const HideLogo = Template.bind({})
 
 const HideLogoArgs: QRProps = {
   data: {
@@ -65,11 +64,11 @@ const HideLogoArgs: QRProps = {
   logo: {
     hide: true,
   },
-};
+}
 
-HideLogo.args = HideLogoArgs;
+HideLogo.args = HideLogoArgs
 
-export const LogoOpacity = Template.bind({});
+export const LogoOpacity = Template.bind({})
 
 const LogoOpacityArgs: QRProps = {
   data: {
@@ -78,11 +77,11 @@ const LogoOpacityArgs: QRProps = {
   logo: {
     opacity: 0.3,
   },
-};
+}
 
-LogoOpacity.args = LogoOpacityArgs;
+LogoOpacity.args = LogoOpacityArgs
 
-export const CustomLogo = Template.bind({});
+export const CustomLogo = Template.bind({})
 
 const CustomLogoArgs: QRProps = {
   data: {
@@ -91,25 +90,18 @@ const CustomLogoArgs: QRProps = {
   logo: {
     image: 'https://placekitten.com/200/200',
   },
-};
+}
 
-CustomLogo.args = CustomLogoArgs;
+CustomLogo.args = CustomLogoArgs
 
-export const CustomRenderers = Template.bind({});
+export const CustomRenderers = Template.bind({})
 
 const CustomRenderersArgs: QRProps = {
   data: {
     url: 'https://bloom.co',
   },
   dotAs: (props) => (
-    <rect
-      shapeRendering="crispEdges"
-      fill={props.color}
-      x={props.left}
-      y={props.top}
-      height={props.size}
-      width={props.size}
-    />
+    <rect shapeRendering="crispEdges" fill={props.color} x={props.left} y={props.top} height={props.size} width={props.size} />
   ),
   eyeAs: (props) => {
     const maskId = `${props.baseId}-eye-mask-${props.left}-${props.top}`
@@ -118,42 +110,29 @@ const CustomRenderersArgs: QRProps = {
       <>
         <mask id={maskId}>
           <rect fill="white" x={props.left} y={props.top} width={props.size * 7} height={props.size * 7} />
-          <rect
-            fill="black"
-            x={props.left + props.size}
-            y={props.top + props.size}
-            width={props.size * 5}
-            height={props.size * 5}
-          />
+          <rect fill="black" x={props.left + props.size} y={props.top + props.size} width={props.size * 5} height={props.size * 5} />
         </mask>
-        <rect
-          mask={`url(#${maskId})`}
-          fill={props.color}
-          x={props.left}
-          y={props.top}
-          width={props.size * 7}
-          height={props.size * 7}
-        />
+        <rect mask={`url(#${maskId})`} fill={props.color} x={props.left} y={props.top} width={props.size * 7} height={props.size * 7} />
         <rect fill={props.color} x={props.left + 2} y={props.top + 2} width={props.size * 3} height={props.size * 3} />
       </>
     )
-  }
-};
+  },
+}
 
-CustomRenderers.args = CustomRenderersArgs;
+CustomRenderers.args = CustomRenderersArgs
 
-export const CustomProps = Template.bind({});
+export const CustomProps = Template.bind({})
 
 const CustomPropsArgs: ComponentProps<'svg', QRProps> = {
   data: {
     url: 'https://bloom.co',
   },
   onClick: () => {
-    alert('Clicked!');
+    alert('Clicked!')
   },
   style: {
     margin: '25px',
   },
-};
+}
 
-CustomProps.args = CustomPropsArgs;
+CustomProps.args = CustomPropsArgs
