@@ -3,6 +3,11 @@
 **Features**:
 
 - Support QR encoding modes
+
+**Misc**:
+
+- Bump dependencies
+
 # 3.2.0
 
 **Features**:
