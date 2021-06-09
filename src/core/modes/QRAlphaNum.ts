@@ -9,6 +9,14 @@ const ALPHA_NUM_CHARS = [
   ' ', '$', '%', '*', '+', '-', '.', '/', ':',
 ]
 
+const safeGetCharCode = (char: string) => {
+  const code = ALPHA_NUM_CHARS.indexOf(char)
+
+  if (code < 0) throw new Error(`Unsupported character: ${char}`)
+
+  return code
+}
+
 export class QRAlphaNum extends QRData {
   constructor(data: string) {
     super(Mode.ALPHA_NUM, data)
@@ -18,11 +26,11 @@ export class QRAlphaNum extends QRData {
     let i
 
     for (i = 0; i + 2 <= this.data.length; i += 2) {
-      buffer.put(ALPHA_NUM_CHARS.indexOf(this.data[i]) * 45 + ALPHA_NUM_CHARS.indexOf(this.data[i + 1]), 11)
+      buffer.put(safeGetCharCode(this.data[i]) * 45 + safeGetCharCode(this.data[i + 1]), 11)
     }
 
     if (this.data.length % 2) {
-      buffer.put(ALPHA_NUM_CHARS.indexOf(this.data[i]), 6)
+      buffer.put(safeGetCharCode(this.data[i]), 6)
     }
   }
 
