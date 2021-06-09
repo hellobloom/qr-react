@@ -1,5 +1,28 @@
 import { BitBuffer } from '../util/BitBuffer'
-import { Mode } from '../enums'
+import { Mode } from '../shared'
+
+type TypeNumberGroup = 'under10' | 'under27' | 'under41'
+
+const typeNumberToLengthInBits: { [key in TypeNumberGroup]: { [key in Mode]: number } } = {
+  under10: {
+    [Mode.NUM]: 10,
+    [Mode.ALPHA_NUM]: 9,
+    [Mode['8BIT_BYTE']]: 8,
+    [Mode.KANJI]: 8,
+  },
+  under27: {
+    [Mode.NUM]: 12,
+    [Mode.ALPHA_NUM]: 11,
+    [Mode['8BIT_BYTE']]: 16,
+    [Mode.KANJI]: 10,
+  },
+  under41: {
+    [Mode.NUM]: 14,
+    [Mode.ALPHA_NUM]: 13,
+    [Mode['8BIT_BYTE']]: 16,
+    [Mode.KANJI]: 12,
+  },
+}
 
 export abstract class QRData {
   constructor(private _mode: Mode, private _data: string) {}
@@ -12,52 +35,23 @@ export abstract class QRData {
     return this._data
   }
 
-  public abstract getLength(): number
+  abstract getLength(): number
 
-  public abstract write(buffer: BitBuffer): void
+  abstract write(buffer: BitBuffer): void
 
-  public getLengthInBits(typeNumber: number): number {
+  getLengthInBits(typeNumber: number): number {
+    let typeNumberGroup: TypeNumberGroup
+
     if (typeNumber >= 1 && typeNumber < 10) {
-      switch (this.mode) {
-        case Mode.NUM:
-          return 10
-        case Mode.ALPHA_NUM:
-          return 9
-        case Mode['8BIT_BYTE']:
-          return 8
-        case Mode.KANJI:
-          return 8
-        default:
-          throw new Error(`Unsupported mode: ${this.mode}`)
-      }
+      typeNumberGroup = 'under10'
     } else if (typeNumber < 27) {
-      switch (this.mode) {
-        case Mode.NUM:
-          return 12
-        case Mode.ALPHA_NUM:
-          return 11
-        case Mode['8BIT_BYTE']:
-          return 16
-        case Mode.KANJI:
-          return 10
-        default:
-          throw new Error(`Unsupported mode: ${this.mode}`)
-      }
+      typeNumberGroup = 'under27'
     } else if (typeNumber < 41) {
-      switch (this.mode) {
-        case Mode.NUM:
-          return 14
-        case Mode.ALPHA_NUM:
-          return 13
-        case Mode['8BIT_BYTE']:
-          return 16
-        case Mode.KANJI:
-          return 12
-        default:
-          throw new Error(`Unsupported mode: ${this.mode}`)
-      }
+      typeNumberGroup = 'under41'
     } else {
       throw new Error(`Unsupported typeNumber: ${typeNumber}`)
     }
+
+    return typeNumberToLengthInBits[typeNumberGroup][this.mode]
   }
 }

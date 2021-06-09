@@ -1,3 +1,8 @@
+# 3.3.0
+
+**Features**:
+
+- Support QR encoding modes
 # 3.2.0
 
 **Features**:

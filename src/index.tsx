@@ -81,7 +81,6 @@ export type QRProps = QROptions & {
 
 export const QR: FC<'svg', QRProps> = ({
   data,
-  mode = '8BIT_BYTE',
   fgColor = '#6067f1',
   bgColor = '#ffffff00',
   ecLevel = 'L',
@@ -129,7 +128,7 @@ export const QR: FC<'svg', QRProps> = ({
     qr.make()
 
     return qr.modules
-  }, [data, mode, ecLevel])
+  }, [data, ecLevel])
 
   const logoMaskId = `${id}-logo-mask`
   const size = modules.length

@@ -69,7 +69,7 @@ const AlphaNumModeArgs: QRProps = {
   data: [
     {
       mode: 'ALPHA_NUM',
-      value: 'https://bloom.co',
+      value: '123ABC',
     },
   ],
 }

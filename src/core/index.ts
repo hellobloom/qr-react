@@ -1,17 +1,12 @@
 import { QR8BitByte, QRAlphaNum, QRKanji, QRNum, QRData } from './modes'
 import { BitBuffer } from './util/BitBuffer'
-import { Polynomial } from './util/Polynomial'
-import { getRSBlocks, RSBlock } from './util/RSBlock'
-import { getMaskFunc, getPatternPosition, getBCHTypeInfo, getBCHTypeNumber, getErrorCorrectionPolynomial, getLengthInBits } from './util/qr'
-import { ErrorCorrectionLevel, Mode } from './enums'
+import { getRSBlocks } from './util/RSBlock'
+import { maskPatternToFunc, getPatternPosition, getBCHTypeInfo, getBCHTypeNumber, getLengthInBits, createData } from './util/qr'
+import { ErrorCorrectionLevel, MaskPattern, Mode } from './shared'
 
 export { ErrorCorrectionLevel, Mode, QR8BitByte, QRAlphaNum, QRKanji, QRNum, QRData }
 
 export class QRCode {
-  private static PAD0 = 0xec
-
-  private static PAD1 = 0x11
-
   private _typeNumber: number
 
   private _ecLevel: ErrorCorrectionLevel
@@ -51,7 +46,7 @@ export class QRCode {
     return this._qrDataList
   }
 
-  isDark(row: number, col: number) {
+  isDark = (row: number, col: number) => {
     return this.modules[row][col]
   }
 
@@ -203,7 +198,7 @@ export class QRCode {
 
   private getBestMaskPattern = () => {
     let minLostPoint = 0
-    let pattern = 0
+    let pattern: MaskPattern = 0
 
     for (let i = 0; i < 8; i += 1) {
       this.makeImpl(true, i)
@@ -218,7 +213,7 @@ export class QRCode {
     return pattern
   }
 
-  private makeImpl = (test: boolean, maskPattern: number) => {
+  private makeImpl = (test: boolean, maskPattern: MaskPattern) => {
     // initialize modules
     this._moduleCount = this.typeNumber * 4 + 17
     this._modules = (() => {
@@ -243,16 +238,16 @@ export class QRCode {
       this.setupTypeNumber(test)
     }
 
-    const data = QRCode.createData(this.typeNumber, this.ecLevel, this.qrDataList)
+    const data = createData(this.typeNumber, this.ecLevel, this.qrDataList)
     this.mapData(data, maskPattern)
   }
 
-  private mapData = (data: number[], maskPattern: number) => {
+  private mapData = (data: number[], maskPattern: MaskPattern) => {
     let inc = -1
     let row = this.moduleCount - 1
     let bitIndex = 7
     let byteIndex = 0
-    const maskFunc = getMaskFunc(maskPattern)
+    const maskFunc = maskPatternToFunc[maskPattern]
 
     for (let col = this.moduleCount - 1; col > 0; col -= 2) {
       if (col === 6) {
@@ -404,115 +399,5 @@ export class QRCode {
 
     // fixed
     this._modules[this.moduleCount - 8][8] = !test
-  }
-
-  public static createData = (typeNumber: number, ecLevel: ErrorCorrectionLevel, dataArray: QRData[]) => {
-    const rsBlocks = getRSBlocks(typeNumber, ecLevel)
-
-    const buffer = new BitBuffer()
-
-    for (let i = 0; i < dataArray.length; i += 1) {
-      const data = dataArray[i]
-      buffer.put(data.mode, 4)
-      buffer.put(data.getLength(), data.getLengthInBits(typeNumber))
-      data.write(buffer)
-    }
-
-    // calc max data count
-    let totalDataCount = 0
-    for (let i = 0; i < rsBlocks.length; i += 1) {
-      totalDataCount += rsBlocks[i].dataCount
-    }
-
-    if (buffer.length > totalDataCount * 8) {
-      throw new Error(`Length overflow (${buffer.length}>${totalDataCount * 8})`)
-    }
-
-    // end
-    if (buffer.length + 4 <= totalDataCount * 8) {
-      buffer.put(0, 4)
-    }
-
-    // padding
-    while (buffer.length % 8 !== 0) {
-      buffer.putBit(false)
-    }
-
-    // padding
-    while (true) {
-      if (buffer.length >= totalDataCount * 8) {
-        break
-      }
-      buffer.put(QRCode.PAD0, 8)
-
-      if (buffer.length >= totalDataCount * 8) {
-        break
-      }
-      buffer.put(QRCode.PAD1, 8)
-    }
-
-    return QRCode.createBytes(buffer, rsBlocks)
-  }
-
-  private static createBytes = (buffer: BitBuffer, rsBlocks: RSBlock[]) => {
-    let offset = 0
-
-    let maxDcCount = 0
-    let maxEcCount = 0
-
-    const dcdata: number[][] = new Array(rsBlocks.length)
-    const ecdata: number[][] = new Array(rsBlocks.length)
-
-    for (let r = 0; r < rsBlocks.length; r += 1) {
-      const dcCount = rsBlocks[r].dataCount
-      const ecCount = rsBlocks[r].totalCount - dcCount
-
-      maxDcCount = Math.max(maxDcCount, dcCount)
-      maxEcCount = Math.max(maxEcCount, ecCount)
-
-      dcdata[r] = new Array(dcCount)
-      for (let i = 0; i < dcdata[r].length; i += 1) {
-        dcdata[r][i] = 0xff & buffer.buffer[i + offset]
-      }
-      offset += dcCount
-
-      const rsPoly = getErrorCorrectionPolynomial(ecCount)
-      const rawPoly = new Polynomial(dcdata[r], rsPoly.length - 1)
-
-      const modPoly = rawPoly.mod(rsPoly)
-      ecdata[r] = new Array(rsPoly.length - 1)
-      for (let i = 0; i < ecdata[r].length; i += 1) {
-        const modIndex = i + modPoly.length - ecdata[r].length
-        ecdata[r][i] = modIndex >= 0 ? modPoly.getAt(modIndex) : 0
-      }
-    }
-
-    let totalCodeCount = 0
-    for (let i = 0; i < rsBlocks.length; i += 1) {
-      totalCodeCount += rsBlocks[i].totalCount
-    }
-
-    const data = new Array(totalCodeCount)
-    let index = 0
-
-    for (let i = 0; i < maxDcCount; i += 1) {
-      for (let r = 0; r < rsBlocks.length; r += 1) {
-        if (i < dcdata[r].length) {
-          data[index] = dcdata[r][i]
-          index += 1
-        }
-      }
-    }
-
-    for (let i = 0; i < maxEcCount; i += 1) {
-      for (let r = 0; r < rsBlocks.length; r += 1) {
-        if (i < ecdata[r].length) {
-          data[index] = ecdata[r][i]
-          index += 1
-        }
-      }
-    }
-
-    return data
   }
 }
