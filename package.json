@@ -76,11 +76,11 @@
   "size-limit": [
     {
       "path": "dist/qr-react.cjs.production.min.js",
-      "limit": "38 KB"
+      "limit": "25 KB"
     },
     {
       "path": "dist/qr-react.esm.js",
-      "limit": "38 KB"
+      "limit": "25 KB"
     }
   ]
 }

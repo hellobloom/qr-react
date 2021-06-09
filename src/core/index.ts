@@ -1,7 +1,7 @@
 import { QR8BitByte, QRAlphaNum, QRKanji, QRNum, QRData } from './modes'
 import { BitBuffer } from './util/BitBuffer'
 import { getRSBlocks } from './util/RSBlock'
-import { maskPatternToFunc, getPatternPosition, getBCHTypeInfo, getBCHTypeNumber, getLengthInBits, createData } from './util/qr'
+import { maskPatternToFunc, getPatternPosition, getBCHTypeInfo, getBCHTypeNumber, getCharCount, createData } from './util/qr'
 import { ErrorCorrectionLevel, MaskPattern, Mode } from './shared'
 
 export { ErrorCorrectionLevel, Mode, QR8BitByte, QRAlphaNum, QRKanji, QRNum, QRData }
@@ -72,7 +72,7 @@ export class QRCode {
         for (let i = 0; i < this.qrDataList.length; i += 1) {
           const data = this.qrDataList[i]
           buffer.put(data.mode, 4)
-          buffer.put(data.getLength(), getLengthInBits(data.mode, i))
+          buffer.put(data.getLength(), getCharCount(data.mode, i))
           data.write(buffer)
         }
 

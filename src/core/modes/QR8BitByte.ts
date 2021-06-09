@@ -39,7 +39,7 @@ export class QR8BitByte extends QRData {
     this.bytes.forEach((datum) => buffer.put(datum, 8))
   }
 
-  getLength(): number {
+  getLength() {
     return this.bytes.length
   }
 }

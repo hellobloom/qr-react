@@ -15,54 +15,6 @@ const PAD0 = 0xec
 
 const PAD1 = 0x11
 
-export const getLengthInBits = (mode: Mode, typeNumber: number) => {
-  if (typeNumber >= 1 && typeNumber < 10) {
-    // 1 - 9
-    switch (mode) {
-      case Mode.NUM:
-        return 10
-      case Mode.ALPHA_NUM:
-        return 9
-      case Mode['8BIT_BYTE']:
-        return 8
-      case Mode.KANJI:
-        return 8
-      default:
-        throw new Error(`mode:${mode}`)
-    }
-  } else if (typeNumber < 27) {
-    // 10 - 26
-    switch (mode) {
-      case Mode.NUM:
-        return 12
-      case Mode.ALPHA_NUM:
-        return 11
-      case Mode['8BIT_BYTE']:
-        return 16
-      case Mode.KANJI:
-        return 10
-      default:
-        throw new Error(`mode:${mode}`)
-    }
-  } else if (typeNumber < 41) {
-    // 27 - 40
-    switch (mode) {
-      case Mode.NUM:
-        return 14
-      case Mode.ALPHA_NUM:
-        return 13
-      case Mode['8BIT_BYTE']:
-        return 16
-      case Mode.KANJI:
-        return 12
-      default:
-        throw new Error(`mode:${mode}`)
-    }
-  } else {
-    throw new Error(`Unsupported typeNumber: ${typeNumber}`)
-  }
-}
-
 const getRowColCoords = (typeNumber: number) => {
   if (typeNumber === 1) return []
 
@@ -236,7 +188,7 @@ const typeNumberToLengthInBits: { [key in TypeNumberGroup]: { [key in Mode]: num
   },
 }
 
-const getCharCount = (mode: Mode, typeNumber: number) => {
+export const getCharCount = (mode: Mode, typeNumber: number) => {
   let typeNumberGroup: TypeNumberGroup
 
   if (typeNumber >= 1 && typeNumber < 10) {
