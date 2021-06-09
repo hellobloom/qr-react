@@ -295,8 +295,8 @@ export class QRCode {
 
     for (let i = 0; i < pos.length; i += 1) {
       for (let j = 0; j < pos.length; j += 1) {
-        const row = pos[i]
-        const col = pos[j]
+        const row = pos[i][0]
+        const col = pos[i][1]
 
         if (this.modules[row][col] !== null) {
           // eslint-disable-next-line no-continue

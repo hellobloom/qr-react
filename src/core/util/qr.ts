@@ -5,49 +5,6 @@ import { getRSBlocks, RSBlock } from './RSBlock'
 import { BitBuffer } from './BitBuffer'
 import { QRData } from '../modes'
 
-const PATTERN_POSITION_TABLE = [
-  [],
-  [6, 18],
-  [6, 22],
-  [6, 26],
-  [6, 30],
-  [6, 34],
-  [6, 22, 38],
-  [6, 24, 42],
-  [6, 26, 46],
-  [6, 28, 50],
-  [6, 30, 54],
-  [6, 32, 58],
-  [6, 34, 62],
-  [6, 26, 46, 66],
-  [6, 26, 48, 70],
-  [6, 26, 50, 74],
-  [6, 30, 54, 78],
-  [6, 30, 56, 82],
-  [6, 30, 58, 86],
-  [6, 34, 62, 90],
-  [6, 28, 50, 72, 94],
-  [6, 26, 50, 74, 98],
-  [6, 30, 54, 78, 102],
-  [6, 28, 54, 80, 106],
-  [6, 32, 58, 84, 110],
-  [6, 30, 58, 86, 114],
-  [6, 34, 62, 90, 118],
-  [6, 26, 50, 74, 98, 122],
-  [6, 30, 54, 78, 102, 126],
-  [6, 26, 52, 78, 104, 130],
-  [6, 30, 56, 82, 108, 134],
-  [6, 34, 60, 86, 112, 138],
-  [6, 30, 58, 86, 114, 142],
-  [6, 34, 62, 90, 118, 146],
-  [6, 30, 54, 78, 102, 126, 150],
-  [6, 24, 50, 76, 102, 128, 154],
-  [6, 28, 54, 80, 106, 132, 158],
-  [6, 32, 58, 84, 110, 136, 162],
-  [6, 26, 54, 82, 110, 138, 166],
-  [6, 30, 58, 86, 114, 142, 170],
-]
-
 const G15 = (1 << 10) | (1 << 8) | (1 << 5) | (1 << 4) | (1 << 2) | (1 << 1) | (1 << 0)
 
 const G18 = (1 << 12) | (1 << 11) | (1 << 10) | (1 << 9) | (1 << 8) | (1 << 5) | (1 << 2) | (1 << 0)
@@ -106,8 +63,41 @@ export const getLengthInBits = (mode: Mode, typeNumber: number) => {
   }
 }
 
+const getRowColCoords = (typeNumber: number) => {
+  if (typeNumber === 1) return []
+
+  const posCount = Math.floor(typeNumber / 7) + 2
+  const size = typeNumber * 4 + 17
+  const intervals = size === 145 ? 26 : Math.ceil((size - 13) / (2 * posCount - 2)) * 2
+  const positions = [size - 7] // Last coord is always (size - 7)
+
+  for (let i = 1; i < posCount - 1; i += 1) {
+    positions[i] = positions[i - 1] - intervals
+  }
+
+  positions.push(6) // First coord is always 6
+
+  return positions.reverse()
+}
+
 export const getPatternPosition = (typeNumber: number) => {
-  return PATTERN_POSITION_TABLE[typeNumber - 1]
+  const coords = []
+  const pos = getRowColCoords(typeNumber)
+  const posLength = pos.length
+
+  for (let i = 0; i < posLength; i += 1) {
+    for (let j = 0; j < posLength; j += 1) {
+      // Skip if position is occupied by finder patterns
+      if ((i === 0 && j === 0) || (i === 0 && j === posLength - 1) || (i === posLength - 1 && j === 0)) {
+        // eslint-disable-next-line no-continue
+        continue
+      }
+
+      coords.push([pos[i], pos[j]])
+    }
+  }
+
+  return coords
 }
 
 export const getErrorCorrectionPolynomial = (ecLength: number) => {
@@ -223,17 +213,55 @@ const createBytes = (buffer: BitBuffer, rsBlocks: RSBlock[]) => {
   return data
 }
 
+type TypeNumberGroup = 'under10' | 'under27' | 'under41'
+
+const typeNumberToLengthInBits: { [key in TypeNumberGroup]: { [key in Mode]: number } } = {
+  under10: {
+    [Mode.NUM]: 10,
+    [Mode.ALPHA_NUM]: 9,
+    [Mode['8BIT_BYTE']]: 8,
+    [Mode.KANJI]: 8,
+  },
+  under27: {
+    [Mode.NUM]: 12,
+    [Mode.ALPHA_NUM]: 11,
+    [Mode['8BIT_BYTE']]: 16,
+    [Mode.KANJI]: 10,
+  },
+  under41: {
+    [Mode.NUM]: 14,
+    [Mode.ALPHA_NUM]: 13,
+    [Mode['8BIT_BYTE']]: 16,
+    [Mode.KANJI]: 12,
+  },
+}
+
+const getCharCount = (mode: Mode, typeNumber: number) => {
+  let typeNumberGroup: TypeNumberGroup
+
+  if (typeNumber >= 1 && typeNumber < 10) {
+    typeNumberGroup = 'under10'
+  } else if (typeNumber < 27) {
+    typeNumberGroup = 'under27'
+  } else if (typeNumber < 41) {
+    typeNumberGroup = 'under41'
+  } else {
+    throw new Error(`Unsupported typeNumber: ${typeNumber}`)
+  }
+
+  return typeNumberToLengthInBits[typeNumberGroup][mode]
+}
+
 export const createData = (typeNumber: number, ecLevel: ErrorCorrectionLevel, dataArray: QRData[]) => {
   const rsBlocks = getRSBlocks(typeNumber, ecLevel)
 
   const buffer = new BitBuffer()
 
-  for (let i = 0; i < dataArray.length; i += 1) {
-    const data = dataArray[i]
+  dataArray.forEach((data) => {
     buffer.put(data.mode, 4)
-    buffer.put(data.getLength(), data.getLengthInBits(typeNumber))
+    buffer.put(data.getLength(), getCharCount(data.mode, typeNumber))
     data.write(buffer)
-  }
+  })
 
   // calc max data count
   let totalDataCount = 0
